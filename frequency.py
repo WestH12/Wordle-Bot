@@ -4,8 +4,8 @@ import hashlib
 import pandas as pd
 
 word_freq = {}
-all_guesses = Path('valid-wordle-words.txt').read_text().splitlines()
-offensive_words = Path('badwords.txt').read_text().splitlines()
+all_guesses = Path('files/valid-wordle-words.txt').read_text().splitlines()
+offensive_words = Path('files/badwords.txt').read_text().splitlines()
 legal_guesses = []
 
 
@@ -25,7 +25,7 @@ def check_hashes():
 
 
 def get_freq():
-    freq_list_df = pd.read_csv('unigram_freq.csv', header=0, index_col='word')
+    freq_list_df = pd.read_csv('files/unigram_freq.csv', header=0, index_col='word')
     freq_list_df['count'] = freq_list_df['count'].astype(float)
     freq_list = freq_list_df[freq_list_df.index.str.len() == 5]['count'].to_dict()
     for word in legal_guesses:
