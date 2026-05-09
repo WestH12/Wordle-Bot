@@ -1,12 +1,31 @@
-import requests
-import hashlib
-from pathlib import Path
+import frequency
+import entropy
 
-url = 'https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/badwordslist/badwords.txt'
-r = str(requests.get(url).text.splitlines())
-r_hash = hashlib.sha256(r.encode())
+frequency.check_hashes()
+word_freq = frequency.get_freq()
 
-local_hash = hashlib.sha256(str(Path('badwords.txt').read_text().splitlines()).encode())
-print(local_hash.hexdigest() == r_hash.hexdigest())
+guess = 1
+legal_guesses = frequency.legal_guesses
+print("Welcome to Westley's Wordle Bot!")
+print('Try the first guess of: crane')
+while True:
+    if guess == 1:
+        word = 'crane'
+    else:
+        word = entropy.tot_guess_eval(legal_guesses)
 
+    feedback = input('Feedback: ').strip()
+    if feedback == '22222':
+        print(f"Congratulations on guessing the word in {guess} turn")
+        again = input("Do you want to play again? ").lower()
+        if again == 'yes':
+            legal_guesses = frequency.legal_guesses
+            guess = 1
+            print("\nWelcome to Westley's Wordle Bot!")
+            print('Try the first guess of: crane')
+        else:
+            break
+    else:
+        legal_guesses = entropy.redefine_list(word, legal_guesses, feedback)
+        guess += 1
 

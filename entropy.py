@@ -1,0 +1,73 @@
+from frequency import legal_guesses, word_freq
+from math import log2
+
+
+def get_entropy(prob):
+    return -prob * log2(prob)
+
+
+def total_entropy(guesses):
+    total_weight = sum(word_freq.values())
+    entropy = 0
+    for word in guesses:
+        entropy += get_entropy(word_freq[word] / total_weight)
+    return entropy
+
+
+def get_feedback(candidate, word):
+    answer = [0] * 5
+    word = list(word)
+    candidate = list(candidate)
+
+    for i in range(5):
+        if candidate[i] == word[i]:
+            answer[i] = '2'
+            word[i] = None
+            candidate[i] = None
+
+    for i in range(5):
+        if candidate[i] is not None:
+            if candidate[i] in word:
+                answer[i] = '1'
+                word[word.index(candidate[i])] = None
+
+    return "".join(map(str, answer))
+
+
+def redefine_list(guess, guess_list, feedback):
+    return [word for word in guess_list if get_feedback(guess, word) == feedback]
+
+def guess_eval(guess, guess_list):
+    buckets = {}
+    tot_weight = 0
+    for word in guess_list:
+        tot_weight += word_freq[word]
+
+    for word in guess_list:
+        answer = get_feedback(guess, word)
+        if answer not in buckets.keys():
+
+            buckets[answer] = word_freq[word]
+        else:
+            buckets[answer] += word_freq[word]
+
+    tot_entropy = 0
+    for pattern in buckets.keys():
+        tot_entropy += get_entropy(buckets[pattern] / tot_weight)
+
+    return tot_entropy
+
+
+def tot_guess_eval(guess_list):
+    best_guess = ''
+    best_entropy = -1
+
+    for word in guess_list:
+
+        temp = guess_eval(word, guess_list)
+        if best_entropy < temp:
+            best_guess = word
+            best_entropy = temp
+
+    print('\nBest guess is: ' + best_guess + '; with entropy of ' + str(best_entropy))
+    return best_guess
