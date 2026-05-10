@@ -37,6 +37,7 @@ def get_feedback(candidate, word):
 def redefine_list(guess, guess_list, feedback):
     return [word for word in guess_list if get_feedback(guess, word) == feedback]
 
+
 def guess_eval(guess, guess_list):
     buckets = {}
     tot_weight = 0
@@ -46,7 +47,6 @@ def guess_eval(guess, guess_list):
     for word in guess_list:
         answer = get_feedback(guess, word)
         if answer not in buckets.keys():
-
             buckets[answer] = word_freq[word]
         else:
             buckets[answer] += word_freq[word]
@@ -64,10 +64,9 @@ def tot_guess_eval(guess_list):
 
     for word in guess_list:
 
-        temp = guess_eval(word, guess_list)
+        temp = guess_eval(word, guess_list) + (1/len(guess_list) * word_freq[word])
         if best_entropy < temp:
             best_guess = word
             best_entropy = temp
 
-    print('\nBest guess is: ' + best_guess + '; with entropy of ' + str(best_entropy))
     return best_guess
