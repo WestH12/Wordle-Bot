@@ -1,5 +1,8 @@
-from frequency import legal_guesses, word_freq
+import frequency
 from math import log2
+
+word_freq = frequency.get_freq()
+legal_guesses = frequency.check_hashes()
 
 
 def get_entropy(prob):
@@ -64,7 +67,7 @@ def tot_guess_eval(guess_list):
 
     for word in guess_list:
 
-        temp = guess_eval(word, guess_list) + (1/len(guess_list) * word_freq[word])
+        temp = guess_eval(word, guess_list) + log2((word_freq[word] * 100000) + 1)
         if best_entropy < temp:
             best_guess = word
             best_entropy = temp

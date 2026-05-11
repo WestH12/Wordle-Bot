@@ -11,14 +11,16 @@ def test_bot(legal_guesses):
     missed = 0
     missed_list = []
 
-    print("Testing Westley's Wordle Bot")
+    print('-' * 50)
+    print("             Testing Westley's Wordle Bot")
+    print('-' * 50)
 
     for i, secret in enumerate(legal_guesses):
         guesses_list = legal_guesses
         guess = 1
         if (i + 1) % (math.floor(len(legal_guesses) * .01)) == 0 and i != 0:
             perc = (i + 1) / len(legal_guesses) * 100
-            print(f'Testing: {perc:.2f}% | Average Score:  - ' + str(
+            print(f'Testing: {perc:.2f}% | Average Score: ' + str(
                 round(accuracy / (i + 1), 2)) + f' - # of Missed Words: {missed}')
 
         while True:
@@ -47,4 +49,4 @@ def test_bot(legal_guesses):
         print(word)
 
 
-test_bot(frequency.legal_guesses)
+test_bot(frequency.legal_guesses[:6000])
